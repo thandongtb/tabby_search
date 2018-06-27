@@ -1,0 +1,70 @@
+version: '2'
+services:
+  nginx:
+    container_name: tabby_search_nginx
+    build:
+      context: ./.docker/nginx
+    restart: always
+    links:
+      - web
+    tty: true
+    networks:
+      - mynet
+  pgsql:
+    container_name: tabby_search_pgsql
+    restart: always
+    image: postgres
+    volumes:
+      - ./.docker/data/postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - mynet
+  elasticsearch:
+    image: 'fxdgear/elasticsearch:5.4'
+    environment:
+      - node.max_local_storage_nodes=1
+      - ES_HOST=http://localhost:9200
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      - mynet
+    ports:
+      - "9200:9200"
+  web:
+    container_name: tabby_search_web
+    image: fxdgear/es-django-example:latest
+    build: .
+    restart: always
+    volumes:
+    - .:/code
+    command: python manage.py runserver 0.0.0.0:80
+    environment:
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+      - ES_INDEX=stack
+      - DEBUG=True
+      - ES_USE_SSL=False
+      - ES_HOST=elasticsearch
+    ports:
+    - "85:80"
+    tty: true
+    depends_on:
+      - pgsql
+    networks:
+      mynet:
+        ipv4_address: 10.5.0.5
+
+networks:
+  mynet:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.5.0.0/16
+         gateway: 10.5.0.1
+volumes:
+  esdata:
+    driver: local
