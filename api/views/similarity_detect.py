@@ -17,6 +17,9 @@ import json
 import time
 from random import randint
 from fashion.documents import FashionDocument
+from api.helpers import location
+import base64
+from io import BytesIO
 
 db = redis.StrictRedis(host=settings.REDIS_HOST,
 	port=settings.REDIS_PORT, db=settings.REDIS_DB)
@@ -41,9 +44,9 @@ class SimilarityDetectView(APIView):
         if not form.is_valid():
             return format(code=422, data=[], message=self.failure, errors=form.errors)
 
-        data = []
-        image_path = form.cleaned_data.get('image')
-        image = self.preprocess_image_worker(image_path)
+        encoded_image = form.cleaned_data.get('encoded_image')
+        image_decoded = BytesIO(base64.b64decode(encoded_image))
+        image = self.preprocess_image_worker(image_decoded)
         image = image.copy(order="C")
         k = str(uuid.uuid4())
         image = base64_encode_image(image)
@@ -64,9 +67,14 @@ class SimilarityDetectView(APIView):
             time.sleep(settings.CLIENT_SLEEP)
         data_response = []
         for r in results:
+            cur_location = location.get_random_location()
             data_response.append({
                 'image_id' : r.image_id,
                 'url' : r.image_path,
-                'price' : randint(1000, 10000)
+                'price' : randint(1000, 10000),
+                'currency' : 'VND',
+                'address' : cur_location['location'],
+                'longitude' : cur_location['lng'],
+                'lattitude' : cur_location['lat']
             })
         return format(code=200, data=data_response, message=self.success, errors=[])
