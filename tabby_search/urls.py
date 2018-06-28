@@ -23,9 +23,8 @@ from seller_images import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$', views.home, name='home'),
+    url(r'^fashion_search/$', views.search, name='fashion_search'),
     url(r'^get_sim/(?P<image_id>\d+)/$', views.get_similarity, name='get_similarity'),
-    url(r'^uploads/simple/$', views.simple_upload, name='simple_upload'),
-    url(r'^uploads/form/$', views.model_form_upload, name='model_form_upload'),
     path('api/', include('api.urls')),
 ]
 
