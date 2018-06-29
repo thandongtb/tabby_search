@@ -48,6 +48,12 @@ BATCH_SIZE = env('BATCH_SIZE')
 SERVER_SLEEP = env('SERVER_SLEEP')
 CLIENT_SLEEP = env('CLIENT_SLEEP')
 
+YOLO_CONFIG_PATH=os.path.join(BASE_DIR, env('YOLO_CONFIG_PATH'))
+
+YOLO_MODEL_PATH=os.path.join(BASE_DIR, env('YOLO_MODEL_PATH'))
+
+YOLO_MODEL_BACKEND=os.path.join(BASE_DIR, env('YOLO_MODEL_BACKEND'))
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('APP_DEBUG')
 

@@ -1,88 +1,85 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <script type="text/javascript" src="{% static 'js/index.js' %}">
-    </script>
-    <script src="https://unpkg.com/vue"></script>
-
 <!-- Product -->
-	<section class="bg0 p-t-23 p-b-130">
-		<div class="container">
-			<div class="p-b-10">
-				<h3 class="ltext-103 cl5" onclick="window.location='/'">
-                    Tabby Fashion Search
-				</h3>
-			</div>
+<section class="bg0 p-t-23 p-b-130">
+    <div class="container">
+        <div class="p-b-10">
+            <h3 class="ltext-103 cl5" onclick="window.location='/'">
+                Tabby Fashion Search
+            </h3>
+        </div>
 
-			<div class="flex-w flex-sb-m p-b-52">
-				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" onclick="window.location='/'">
-						Home
-					</button>
+        <div class="flex-w flex-sb-m p-b-52">
+            <div class="flex-w flex-l-m filter-tope-group m-tb-10">
+                <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" onclick="window.location='/'">
+                    Home
+                </button>
 
-					<button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" onclick="window.location='/fashion_search'">
-						Fashion Search
-					</button>
-				</div>
-			</div>
+                <button class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" onclick="window.location='/fashion_search'">
+                    Fashion Search
+                </button>
+            </div>
+        </div>
 
-            <div class="flex-w flex-sb-m p-b-52">
-                <input id="fileinput" type="file" accept="image/gif, image/jpeg, image/png" onchange='readURL(this)' /> <br>
+        <div class="flex-w flex-sb-m p-b-52">
+            <input id="fileinput" type="file" accept="image/gif, image/jpeg, image/png" onchange='readURL(this)' /> <br>
 
+        </div>
+
+        <div hidden="hidden" id="image_query">
+            <h2>Image Query</h2>
+            <br>
+            <img id="image_thumb"/>
+        </div>
+
+        <div class="row isotope-grid" id="vue_app" hidden="hidden">
+            <div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women" v-for"result in data">
+                <!-- Block2 -->
+                <div class="block2">
+                    <div class="block2-pic hov-img0 label-new" data-label="New">
+                        <img src="[[ result.url ]]" alt="IMG-PRODUCT">
+
+                        <a href="/get_sim/{{ obj.image_id }}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
+                            Find Similarity
+                        </a>
+                    </div>
+
+                    <div class="block2-txt flex-w flex-t p-t-14">
+                        <div class="block2-txt-child1 flex-col-l ">
+                            <a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                                Image [[ result.image_id ]]
+                            </a>
+
+                            <span class="stext-105 cl3">
+                                $ [[ result.price ]]
+                            </span>
+                        </div>
+
+                        <div class="block2-txt-child2 flex-r p-t-3">
+                            <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+                                <img class="icon-heart1 dis-block trans-04" src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
+                                <img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'images/icons/icon-heart-02.png' %}" alt="ICON">
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div hidden="hidden" id="image_query">
-                <h2>Image Query</h2>
-                <br>
-                <img id="image_thumb"/>
-            </div>
-
-			<div class="row isotope-grid">
-                {% for obj in images %}
-				<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
-					<!-- Block2 -->
-					<div class="block2">
-						<div class="block2-pic hov-img0 label-new" data-label="New">
-							<img src="{{ obj.image_path }}" alt="IMG-PRODUCT">
-
-							<a href="/get_sim/{{ obj.image_id }}" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
-								Find Similarity
-							</a>
-						</div>
-
-						<div class="block2-txt flex-w flex-t p-t-14">
-							<div class="block2-txt-child1 flex-col-l ">
-								<a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
-									Image {{ obj.image_id }}
-								</a>
-
-								<span class="stext-105 cl3">
-									$ 18.07
-								</span>
-							</div>
-
-							<div class="block2-txt-child2 flex-r p-t-3">
-								<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-									<img class="icon-heart1 dis-block trans-04" src="{% static 'images/icons/icon-heart-01.png' %}" alt="ICON">
-									<img class="icon-heart2 dis-block trans-04 ab-t-l" src="{% static 'images/icons/icon-heart-02.png' %}" alt="ICON">
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-                {% endfor %}
 			</div>
 
-			<!-- Pagination -->
-			<div class="flex-c-m flex-w w-full p-t-38">
-				<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
-					1
-				</a>
 
-				<a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7">
-					2
-				</a>
-			</div>
-		</div>
-	</section>
+        <!-- Pagination -->
+        <div class="flex-c-m flex-w w-full p-t-38">
+            <a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7 active-pagination1">
+                1
+            </a>
+
+            <a href="#" class="flex-c-m how-pagination1 trans-04 m-all-7">
+                2
+            </a>
+        </div>
+    </div>
+
+</section>
 {% endblock %}

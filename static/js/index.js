@@ -19,8 +19,12 @@ function readURL(input) {
                 crossDomain: true,
                 type: 'POST',
                 success: function ( data ) {
-                    console.log('success')
-                    console.log( data );
+                    $('#vue_app').removeAttr('hidden')
+                    new Vue({
+                        delimiters: ['[[', ']]'],
+                        el: '#vue_app',
+                        data: data
+                    })
                 }
             });
 

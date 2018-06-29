@@ -7,8 +7,7 @@ def home(request):
     return render(request, 'core/index.html', {'images': images })
 
 def search(request):
-    images = Fashion.objects.all()[48:60]
-    return render(request, 'core/fashion_search.html', {'images': images })
+    return render(request, 'core/fashion_search.html')
 
 def get_similarity(request, image_id):
     image = Fashion.objects.filter(image_id=image_id)

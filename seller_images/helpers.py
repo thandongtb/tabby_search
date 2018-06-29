@@ -1,7 +1,7 @@
 import numpy as np
 import base64
 import sys
-
+import cv2
 
 def base64_encode_image(a):
     # base64 encode the input NumPy array
@@ -21,3 +21,12 @@ def base64_decode_image(a, dtype, shape):
 
     # return the decoded image
     return a
+
+def base64_to_image(base64_string):
+    try:
+        imgdata = base64.b64decode(base64_string)
+        image = np.asarray(bytearray(imgdata), dtype="uint8")
+        image = cv2.imdecode(image,cv2.COLOR_BGR2RGB)
+        return image
+    except:
+        return np.array([])
