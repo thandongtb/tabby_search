@@ -52,7 +52,7 @@ class SimilarityDetectView(APIView):
             data_response.append({
                 'image_id' : r.image_id,
                 'url' : r.image_path,
-                'price' : randint(1000, 10000),
+                'price' : randint(100000, 500000),
                 'currency' : 'VND',
                 'address' : cur_location['location'],
                 'longitude' : cur_location['lng'],
