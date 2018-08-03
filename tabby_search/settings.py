@@ -48,11 +48,11 @@ BATCH_SIZE = env('BATCH_SIZE')
 SERVER_SLEEP = env('SERVER_SLEEP')
 CLIENT_SLEEP = env('CLIENT_SLEEP')
 
-YOLO_CONFIG_PATH=os.path.join(BASE_DIR, env('YOLO_CONFIG_PATH'))
+# YOLO_CONFIG_PATH=os.path.join(BASE_DIR, env('YOLO_CONFIG_PATH'))
 
-YOLO_MODEL_PATH=os.path.join(BASE_DIR, env('YOLO_MODEL_PATH'))
+# YOLO_MODEL_PATH=os.path.join(BASE_DIR, env('YOLO_MODEL_PATH'))
 
-YOLO_MODEL_BACKEND=os.path.join(BASE_DIR, env('YOLO_MODEL_BACKEND'))
+# YOLO_MODEL_BACKEND=os.path.join(BASE_DIR, env('YOLO_MODEL_BACKEND'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('APP_DEBUG')
@@ -185,3 +185,10 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+ANCHOR = [2.81,6.48, 3.08,3.03, 5.18,7.36, 5.75,4.52, 8.53,7.82]
+NB_CLASS = 3
+OBJ_THRESHOLD = 0.6
+NMS_THRESHOLD = 0.4
+LABEL = {0: 'full', 1: 'lower', 2: 'upper'}
+INVERSE_LABEL = {'full': 0, 'lower': 1, 'upper': 2}
+YOLO_IMG_SIZE = 300
