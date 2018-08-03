@@ -1,20 +1,20 @@
+import json
+import time
+import uuid
+import tabby_search.settings as settings
+import redis
 from django.http import JsonResponse
 from django.utils.translation import gettext_lazy as _
 from rest_framework.parsers import MultiPartParser
 from rest_framework.views import APIView
 from api.forms import SimilarityDetectionForm
 from api.helpers.format_response import format
-import tabby_search.settings as settings
-import redis
-import json
-import time
-import uuid
 from random import randint
 from fashion.documents import FashionDocument
-from api.helpers import location
+from api.helpers import location, get_embedding, base64_validator
 
-db = redis.StrictRedis(host=settings.REDIS_HOST,
-	port=settings.REDIS_PORT, db=settings.REDIS_DB)
+db = redis.StrictRedis(host=settings.REDIS_HOST, 
+    port=settings.REDIS_PORT, db=settings.REDIS_DB)
 
 class SimilarityDetectView(APIView):
     parser_classes = (MultiPartParser,)
@@ -30,22 +30,22 @@ class SimilarityDetectView(APIView):
 
         encoded_image = form.cleaned_data.get('encoded_image')
         object_detect = form.cleaned_data.get('object_detect')
-        k = str(uuid.uuid4())
-        d = {"id": k, "image": encoded_image, 'object_detect' : object_detect}
-        db.rpush(settings.IMAGE_QUEUE, json.dumps(d))
-        start_time = time.time()
+        try:
+            img = get_embedding.convert_image(encoded_image)
+            img, error = base64_validator.valid(img)
+            if error != 0:
+                return format(code=400, data=[], message=self.failure, errors=['Image can not identify'])
+        except:
+            return format(code=400, data=[], message=self.failure, errors=['Image can not identify'])
+        embedding = get_embedding.get_emb(img, object_detect)
+        if embedding is None:
+            return format(code=405, data=[], message=self.timeout, errors=[])
         results = []
-        while True:
-            output = db.get(k)
-            if output is not None:
-                embedding = output.decode("utf-8")
-                results = FashionDocument.search().query("match", embedding=embedding)
-                db.delete(k)
-                break
-            if (time.time() - start_time > 10):
-                return format(code=405, data=[], message=self.timeout, errors=[])
-
-            time.sleep(settings.CLIENT_SLEEP)
+        try:
+            results = FashionDocument.search().query("match", embedding=embedding)
+        except:
+            return format(code=405, data=[], message=self.timeout, errors=[])
+            
         data_response = []
         for r in results:
             cur_location = location.get_random_location()
