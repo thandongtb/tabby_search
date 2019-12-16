@@ -104,7 +104,7 @@ smart-open==1.6.0
 SoundFile==0.9.0.post1
 tb-nightly==1.10.0a20180703
 tensorboard==1.6.0
-tensorflow==1.7.0rc1
+tensorflow==1.15.0
 tensorflow-tensorboard==0.4.0
 termcolor==1.1.0
 terminado==0.8.1
